@@ -1,0 +1,20 @@
+$kind: http-request
+name: CreateMetric
+url: http://localhost:8080/metrics
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"service\": \"order-api\",\r
+
+    \  \"endpoint\": \"/orders\",\r
+
+    \  \"method\": \"GET\",\r
+
+    \  \"statusCode\": 200,\r
+
+    \  \"durationMs\": 125\r
+
+    }"
+order: 1773268739234
