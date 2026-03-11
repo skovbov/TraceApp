@@ -4,16 +4,9 @@ using TraceApp.Domain.Repositories;
 
 namespace TraceApp.Application.Metrics.Commands.RecordMetric;
 
-public sealed class RecordMetricCommandHandler 
+public sealed class RecordMetricCommandHandler(IApiRequestMetricRepository repository)
     : IRequestHandler<RecordMetricCommand>
 {
-    private readonly IApiRequestMetricRepository _repository;
-
-    public RecordMetricCommandHandler(IApiRequestMetricRepository repository)
-    {
-        _repository = repository;
-    }
-
     public async Task Handle(
         RecordMetricCommand command,
         CancellationToken cancellationToken)
@@ -29,6 +22,6 @@ public sealed class RecordMetricCommandHandler
             Timestamp = command.Timestamp
         };
 
-        await _repository.AddAsync(metric, cancellationToken);
+        await repository.AddAsync(metric, cancellationToken);
     }
 }
