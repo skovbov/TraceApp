@@ -1,10 +1,11 @@
 ﻿using MediatR;
+using TraceApp.Application.Abstractions;
 using TraceApp.Domain.Entities;
 using TraceApp.Domain.Repositories;
 
 namespace TraceApp.Application.Metrics.Commands.RecordMetric;
 
-public sealed class RecordMetricCommandHandler(IApiRequestMetricRepository repository)
+public sealed class RecordMetricCommandHandler(IApiRequestMetricRepository repository, IClock clock)
     : IRequestHandler<RecordMetricCommand>
 {
     public async Task Handle(
@@ -19,7 +20,7 @@ public sealed class RecordMetricCommandHandler(IApiRequestMetricRepository repos
             Method = command.Method,
             StatusCode = command.StatusCode,
             DurationMs = command.DurationMs,
-            Timestamp = command.Timestamp
+            Timestamp = clock.UtcNow
         };
 
         await repository.AddAsync(metric, cancellationToken);
