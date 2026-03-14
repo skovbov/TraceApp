@@ -19,6 +19,7 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
     [Fact]
     public async Task PostMetrics_Should_ReturnAccepted_AndPersistMetric()
     {
+        // Arrange
         var client = _factory.CreateClient();
 
         var request = new
@@ -29,11 +30,14 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
             statusCode = 200,
             durationMs = 125
         };
-
+        
+        // Act
         var response = await client.PostAsJsonAsync("/metrics", request);
-
+        
+        // Assert HTTP response
         response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
+        
+        // Assert database state
         using var scope = _factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TraceLensDbContext>();
 
@@ -43,6 +47,7 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
     [Fact]
     public async Task PostMetrics_Should_ReturnBadRequest_WhenCorruptedData()
     {
+        // Arrange
         var client = _factory.CreateClient();
 
         var request = new
@@ -53,9 +58,11 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
             statusCode = "",
             durationMs = 125
         };
-
+        
+        // Act
         var response = await client.PostAsJsonAsync("/metrics", request);
-
+        
+        // Assert HTTP response
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
