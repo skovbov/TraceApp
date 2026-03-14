@@ -7,6 +7,5 @@ public sealed record RecordMetricCommand(
     string Endpoint,
     string Method,
     int StatusCode,
-    long DurationMs,
-    DateTime Timestamp
+    long DurationMs
 ) : IRequest;

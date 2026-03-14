@@ -17,8 +17,7 @@ public static class MapEndpoints
                     request.Endpoint,
                     request.Method,
                     request.StatusCode,
-                    request.DurationMs,
-                    DateTime.UtcNow);
+                    request.DurationMs);
 
                 await sender.Send(command, cancellationToken);
 
