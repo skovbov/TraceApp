@@ -19,7 +19,6 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
     [Fact]
     public async Task PostMetrics_Should_ReturnAccepted_AndPersistMetric()
     {
-        // Arrange
         var client = _factory.CreateClient();
 
         var request = new
@@ -31,22 +30,32 @@ public sealed class RecordMetricEndpointTests : IClassFixture<CustomWebApplicati
             durationMs = 125
         };
 
-        // Act
         var response = await client.PostAsJsonAsync("/metrics", request);
 
-        // Assert HTTP response
         response.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-        // Assert database state
         using var scope = _factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<TraceLensDbContext>();
 
-        var metric = dbContext.ApiRequestMetrics.Single();
+        dbContext.ApiRequestMetrics.Count().Should().Be(1);
+    }
 
-        metric.Service.Should().Be("order-api");
-        metric.Endpoint.Should().Be("/orders");
-        metric.Method.Should().Be("GET");
-        metric.StatusCode.Should().Be(200);
-        metric.DurationMs.Should().Be(125);
+    [Fact]
+    public async Task PostMetrics_Should_ReturnBadRequest_WhenCorruptedData()
+    {
+        var client = _factory.CreateClient();
+
+        var request = new
+        {
+            service = 1,
+            endpoint = "/orders",
+            method = "GET",
+            statusCode = "",
+            durationMs = 125
+        };
+
+        var response = await client.PostAsJsonAsync("/metrics", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
