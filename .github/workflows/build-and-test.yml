@@ -30,7 +30,7 @@ jobs:
         run: dotnet test tests/TraceApp.Application.Tests/TraceApp.Application.Tests.csproj --configuration Release --no-build
 
       - name: Run architecture tests
-        run: dotnet test tests/TraceApp.Architecture.Tests/TraceApp.ArchitectureTests.csproj --configuration Release --no-build
+        run: dotnet test tests/TraceApp.ArchitectureTests/TraceApp.ArchitectureTests.csproj --configuration Release --no-build
 
       - name: Run integration tests
         run: dotnet test tests/TraceApp.IntegrationTests/TraceApp.IntegrationTests.csproj --configuration Release --no-build
